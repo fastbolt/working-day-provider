@@ -3,11 +3,13 @@ name: "Psalm PHP checks"
 on:
     pull_request:
         paths:
+            - "composer.json"
             - "**.php"
             - "psalm.xml"
             - ".github/workflows/psalm.yaml"
     push:
         paths:
+            - "composer.json"
             - "**.php"
             - "psalm.xml"
             - ".github/workflows/psalm.yaml"

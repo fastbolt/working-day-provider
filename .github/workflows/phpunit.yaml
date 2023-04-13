@@ -4,11 +4,13 @@ name: "PHPUnit tests"
 on:
     pull_request:
         paths:
+            - "composer.json"
             - "**.php"
             - "phpunit.xml.dist"
             - ".github/workflows/phpunit.yaml"
     push:
         paths:
+            - "composer.json"
             - "**.php"
             - "phpunit.xml.dist"
             - ".github/workflows/phpunit.yaml"

@@ -3,11 +3,13 @@ name: "PHP_Codesniffer"
 on:
     pull_request:
         paths:
+            - "composer.json"
             - "**.php"
             - "phpcs.xml.dist"
             - ".github/workflows/phpcs.yaml"
     push:
         paths:
+            - "composer.json"
             - "**.php"
             - "phpcs.xml.dist"
             - ".github/workflows/phpcs.yaml"
