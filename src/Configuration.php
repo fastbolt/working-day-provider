@@ -14,6 +14,9 @@ class Configuration
      */
     private array $excludeWeekDays = [6, 7];
 
+    /**
+     * @param array{excludeWeekDays?: int[]} $config
+     */
     public function __construct(array $config = [])
     {
         Assert::allInteger($config['excludeWeekDays'] ?? [], 'excludeWeekDays must be an array of integers');

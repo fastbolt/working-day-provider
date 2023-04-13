@@ -6,5 +6,8 @@ use DateTimeInterface;
 
 interface Holiday
 {
+    /**
+     * @return DateTimeInterface
+     */
     public function getDate(): DateTimeInterface;
 }

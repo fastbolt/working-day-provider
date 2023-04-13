@@ -21,11 +21,15 @@ class WorkingDayProvider
         $this->holidayProvider = $holidayProvider;
     }
 
+    /**
+     * @param DateTimeInterface $periodStart
+     * @param DateTimeInterface $periodEnd
+     *
+     * @return int
+     */
     public function getWorkingDaysForPeriod(DateTimeInterface $periodStart, DateTimeInterface $periodEnd): int
     {
-        /** @var Holiday[] $holidays */
-        $holidays = $this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd);
-        // do strtotime calculations just once
+        $holidays  = $this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd);
         $endDate   = $periodEnd->getTimestamp();
         $startDate = $periodStart->getTimestamp();
 

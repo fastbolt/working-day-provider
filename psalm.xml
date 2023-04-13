@@ -9,7 +9,8 @@
         findUnusedBaselineEntry="true"
         findUnusedCode="false"
         autoloader="vendor/autoload.php"
-        cacheDirectory="var/cache/psalm/" errorBaseline="./.psalm/baseline.xml">
+        cacheDirectory="var/cache/psalm/"
+>
     <projectFiles>
         <directory name="src/"/>
 
@@ -32,7 +33,6 @@
     </fileExtensions>
 
     <plugins>
-        <pluginClass class="Psalm\SymfonyPsalmPlugin\Plugin"/>
-        <pluginClass class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+        <pluginClass class="Psalm\PhpUnitPlugin\Plugin"/>
     </plugins>
 </psalm>

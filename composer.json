@@ -12,7 +12,7 @@
         "phpstan/phpstan" : "^1.10",
         "phpunit/phpunit" : "^9.5",
         "psalm/plugin-phpunit" : "^0.18.4",
-        "slevomat/coding-standard" : "^8.10",
+        "slevomat/coding-standard" : "^7.2.1",
         "spryker/code-sniffer" : "^0.17.18",
         "squizlabs/php_codesniffer" : "^3.7",
         "vimeo/psalm" : "^5.9"
