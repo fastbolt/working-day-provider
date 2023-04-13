@@ -1,0 +1,52 @@
+{
+    "name" : "fastbolt/working-day-provider",
+    "type" : "library",
+    "require" : {
+        "php" : "^7.4|^8.0|^8.1"
+    },
+    "require-dev" : {
+        "fastbolt/test-helpers" : "^0.2.0",
+        "fig-r/psr2r-sniffer" : "^1.5",
+        "phpmd/phpmd" : "^2.13",
+        "phpstan/phpstan" : "^1.10",
+        "phpunit/phpunit" : "^9.5",
+        "psalm/plugin-phpunit" : "^0.18.4",
+        "slevomat/coding-standard" : "^8.10",
+        "spryker/code-sniffer" : "^0.17.18",
+        "squizlabs/php_codesniffer" : "^3.7",
+        "vimeo/psalm" : "^5.9"
+    },
+    "homepage" : "https://github.com/fastbolt/working-day-provider",
+    "license" : "MIT",
+    "autoload" : {
+        "psr-4" : {
+            "Fastbolt\\WorkingDayProvider\\" : "src/"
+        }
+    },
+    "scripts" : {
+        "phpunit" : "vendor/bin/phpunit",
+        "check-style" : "vendor/bin/phpcs",
+        "psalm" : "vendor/bin/psalm",
+        "fix-style" : "vendor/bin/phpcbf",
+        "test" : [
+            "@phpunit",
+            "@psalm",
+            "@check-style"
+        ]
+    },
+    "config" : {
+        "optimize-autoloader" : true,
+        "sort-packages" : true,
+        "preferred-install" : "dist",
+        "allow-plugins" : {
+            "dealerdirect/phpcodesniffer-composer-installer" : true
+        }
+    },
+    "authors" : [
+        {
+            "name" : "Daniel Hirtzbruch",
+            "email" : "dhh@fastbolt.com"
+        }
+    ],
+    "prefer-stable" : true
+}
