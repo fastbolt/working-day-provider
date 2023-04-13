@@ -1,5 +1,6 @@
 {
     "name" : "fastbolt/working-day-provider",
+    "description" : "PHP package to ease calculation of number of working days between two dates.",
     "type" : "library",
     "require" : {
         "php" : "^7.4|^8.0|^8.1",
