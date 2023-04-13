@@ -2,7 +2,8 @@
     "name" : "fastbolt/working-day-provider",
     "type" : "library",
     "require" : {
-        "php" : "^7.4|^8.0|^8.1"
+        "php" : "^7.4|^8.0|^8.1",
+        "webmozart/assert" : "^1.11"
     },
     "require-dev" : {
         "fastbolt/test-helpers" : "^0.2.0",
@@ -23,6 +24,12 @@
             "Fastbolt\\WorkingDayProvider\\" : "src/"
         }
     },
+    "autoload-dev" : {
+        "psr-4" : {
+            "Fastbolt\\WorkingDayProvider\\Tests\\_Fixtures\\" : "tests/_Fixtures/",
+            "Fastbolt\\WorkingDayProvider\\Tests\\Unit\\" : "tests/unit/"
+        }
+    },
     "scripts" : {
         "phpunit" : "vendor/bin/phpunit",
         "check-style" : "vendor/bin/phpcs",
@@ -35,7 +42,6 @@
         ]
     },
     "config" : {
-        "optimize-autoloader" : true,
         "sort-packages" : true,
         "preferred-install" : "dist",
         "allow-plugins" : {
