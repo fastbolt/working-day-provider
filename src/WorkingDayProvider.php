@@ -67,10 +67,12 @@ class WorkingDayProvider
     }
 
     /**
+     * Returns holidays indexed by date in format `Y-m-d`, or an empty array if no holiday provider is configured.
+     *
      * @param DateTime $periodStart
      * @param DateTime $periodEnd
      *
-     * @return Holiday[]
+     * @return array<string, Holiday>
      */
     private function getHolidays(DateTime $periodStart, DateTime $periodEnd): array
     {
@@ -110,8 +112,8 @@ class WorkingDayProvider
     }
 
     /**
-     * @param DateTimeInterface     $iteratorDate
-     * @param array<string,Holiday> $holidays Array of holidays indexed by date in format `Y-m-d`
+     * @param DateTimeInterface      $iteratorDate
+     * @param array<string, Holiday> $holidays Array of holidays indexed by date in format `Y-m-d`
      *
      * @return bool
      */
