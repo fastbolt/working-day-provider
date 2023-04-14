@@ -36,9 +36,7 @@ class WorkingDayProvider
         DateTime $periodStart,
         DateTime $periodEnd
     ): int {
-        $holidays = null === $this->holidayProvider
-            ? []
-            : $this->indexHolidays($this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd));
+        $holidays = $this->getHolidays($periodStart, $periodEnd);
 
         // set time to 00:00:00
         $startDate = DateTimeImmutable::createFromMutable($periodStart)
@@ -66,6 +64,19 @@ class WorkingDayProvider
         }
 
         return $numDays;
+    }
+
+    /**
+     * @param DateTime $periodStart
+     * @param DateTime $periodEnd
+     *
+     * @return Holiday[]
+     */
+    private function getHolidays(DateTime $periodStart, DateTime $periodEnd): array
+    {
+        return null === $this->holidayProvider
+            ? []
+            : $this->indexHolidays($this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd));
     }
 
     /**
