@@ -9,16 +9,16 @@ class WorkingDayProvider
 {
     private Configuration $configuration;
 
-    private HolidayProvider $holidayProvider;
+    private ?HolidayProvider $holidayProvider;
 
     /**
-     * @param Configuration   $configuration
-     * @param HolidayProvider $holidayProvider
+     * @param HolidayProvider|null $holidayProvider
+     * @param Configuration|null   $configuration
      */
-    public function __construct(Configuration $configuration, HolidayProvider $holidayProvider)
+    public function __construct(?HolidayProvider $holidayProvider = null, ?Configuration $configuration = null)
     {
-        $this->configuration   = $configuration;
         $this->holidayProvider = $holidayProvider;
+        $this->configuration   = $configuration ?? Configuration::getDefaultConfiguration();
     }
 
     /**
@@ -29,7 +29,9 @@ class WorkingDayProvider
      */
     public function getWorkingDaysForPeriod(DateTimeInterface $periodStart, DateTimeInterface $periodEnd): int
     {
-        $holidays  = $this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd);
+        $holidays  = null === $this->holidayProvider
+            ? []
+            : $this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd);
         $endDate   = $periodEnd->getTimestamp();
         $startDate = $periodStart->getTimestamp();
 

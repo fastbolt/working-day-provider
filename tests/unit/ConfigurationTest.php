@@ -11,6 +11,12 @@ use InvalidArgumentException;
  */
 class ConfigurationTest extends BaseTestCase
 {
+    public function testGetDefaultConfiguration()
+    {
+        $config = Configuration::getDefaultConfiguration();
+        self::assertSame([6, 7], $config->getExcludeWeekDays());
+    }
+
     public function testConstructDefaultValues(): void
     {
         $config = new Configuration();

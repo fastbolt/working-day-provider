@@ -34,6 +34,11 @@ class Configuration
         $this->excludeWeekDays = $config['excludeWeekDays'] ?? $this->excludeWeekDays;
     }
 
+    public static function getDefaultConfiguration(): self
+    {
+        return new self;
+    }
+
     /**
      * @return int[]
      */
