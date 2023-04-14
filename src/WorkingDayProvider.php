@@ -2,7 +2,12 @@
 
 namespace Fastbolt\WorkingDayProvider;
 
+use DateInterval;
+use DatePeriod;
+use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
+use Fastbolt\WorkingDayProvider\Holiday\Holiday;
 use Fastbolt\WorkingDayProvider\Holiday\HolidayProvider;
 
 class WorkingDayProvider
@@ -22,73 +27,87 @@ class WorkingDayProvider
     }
 
     /**
-     * @param DateTimeInterface $periodStart
-     * @param DateTimeInterface $periodEnd
+     * @param DateTime $periodStart
+     * @param DateTime $periodEnd
      *
      * @return int
      */
-    public function getWorkingDaysForPeriod(DateTimeInterface $periodStart, DateTimeInterface $periodEnd): int
-    {
-        $holidays  = null === $this->holidayProvider
+    public function getWorkingDaysForPeriod(
+        DateTime $periodStart,
+        DateTime $periodEnd
+    ): int {
+        $holidays = null === $this->holidayProvider
             ? []
-            : $this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd);
-        $endDate   = $periodEnd->getTimestamp();
-        $startDate = $periodStart->getTimestamp();
+            : $this->indexHolidays($this->holidayProvider->getHolidaysForDateRange($periodStart, $periodEnd));
 
-        //The total number of days between the two dates. We compute the no. of seconds and divide it to 60*60*24
-        //We add one to inlude both dates in the interval.
-        $days = ($endDate - $startDate) / 86400 + 1;
+        // set time to 00:00:00
+        $startDate = DateTimeImmutable::createFromMutable($periodStart)
+                                      ->setTime(0, 0, 0);
 
-        $numFullWeeks     = floor($days / 7);
-        $numRemainingDays = fmod($days, 7);
+        // set time to next day 00:00:00, otherwise end date is not included
+        $endDate = DateTimeImmutable::createFromMutable($periodEnd)
+                                    ->modify('+1 day')
+                                    ->setTime(0, 0, 0);
 
-        //It will return 1 if it's Monday,.. ,7 for Sunday
-        $firstDayOfWeek = (int)date('N', $startDate);
-        $lastDayOfWeek  = (int)date('N', $endDate);
+        $oneDayInterval = DateInterval::createFromDateString('1 day');
+        $oneDayPeriod   = new DatePeriod($startDate, $oneDayInterval, $endDate);
+        $numDays        = 0;
 
-        //---->The two can be equal in leap years when february has 29 days, the equal sign is added here
-        //In the first case the whole interval is within a week, in the second case the interval falls in two weeks.
-        if ($firstDayOfWeek <= $lastDayOfWeek) {
-            if ($firstDayOfWeek <= 6 && 6 <= $lastDayOfWeek) {
-                $numRemainingDays--;
+        foreach ($oneDayPeriod as $iteratorDate) {
+            if ($this->isExcludedDate($iteratorDate)) {
+                continue;
             }
-            if ($firstDayOfWeek <= 7 && 7 <= $lastDayOfWeek) {
-                $numRemainingDays--;
-            }
-        } elseif ($firstDayOfWeek === 7) {
-            // if the start date is a Sunday, then we definitely subtract 1 day
-            $numRemainingDays--;
 
-            if ($lastDayOfWeek === 6) {
-                // if the end date is a Saturday, then we subtract another day
-                $numRemainingDays--;
+            if ($this->isHoliday($iteratorDate, $holidays)) {
+                continue;
             }
-        } else {
-            // the start date was a Saturday (or earlier), and the end date was (Mon..Fri)
-            // so we skip an entire weekend and subtract 2 days
-            $numRemainingDays -= 2;
+
+            $numDays++;
         }
 
-        //The no. of business days is: (number of weeks between the two dates) * (5 working days) + the remainder
-//---->february in none leap years gave a remainder of 0 but still calculated weekends between first and last day, this is one way to fix it
-        $workingDays = $numFullWeeks * 5;
-        if ($numRemainingDays > 0) {
-            $workingDays += $numRemainingDays;
-        }
+        return $numDays;
+    }
 
-        //We subtract the holidays
+    /**
+     * Helper method to index holidays by date in format `Y-m-d`
+     *
+     * @param Holiday[] $holidays
+     *
+     * @return array<string, Holiday>
+     */
+    private function indexHolidays(array $holidays): array
+    {
+        $result = [];
         foreach ($holidays as $holiday) {
-            $timestamp = strtotime($holiday->getDate()->format('Y-m-d'));
-            //If the holiday doesn't fall in weekend
-            if (
-                $startDate <= $timestamp
-                && $timestamp <= $endDate
-                && !in_array((int)date('N', $timestamp), $this->configuration->getExcludeWeekDays(), true)
-            ) {
-                $workingDays--;
-            }
+            $result[$holiday->getDate()->format('Y-m-d')] = $holiday;
         }
 
-        return (int)$workingDays;
+        return $result;
+    }
+
+    /**
+     * @param DateTimeInterface $iteratorDate
+     *
+     * @return bool
+     */
+    private function isExcludedDate(DateTimeInterface $iteratorDate): bool
+    {
+        $dayOfWeek = (int)$iteratorDate->format('N');
+
+        // exclude week days from configuration object
+        return in_array($dayOfWeek, $this->configuration->getExcludeWeekDays(), true);
+    }
+
+    /**
+     * @param DateTimeInterface     $iteratorDate
+     * @param array<string,Holiday> $holidays Array of holidays indexed by date in format `Y-m-d`
+     *
+     * @return bool
+     */
+    private function isHoliday(DateTimeInterface $iteratorDate, array $holidays): bool
+    {
+        $dateFormatted = $iteratorDate->format('Y-m-d');
+
+        return array_key_exists($dateFormatted, $holidays);
     }
 }

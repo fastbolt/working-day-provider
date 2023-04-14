@@ -3,7 +3,6 @@
 namespace Fastbolt\WorkingDayProvider\Tests;
 
 use DateTime;
-use DateTimeInterface;
 use Fastbolt\TestHelpers\BaseTestCase;
 use Fastbolt\WorkingDayProvider\Configuration;
 use Fastbolt\WorkingDayProvider\Holiday\HolidayProvider;
@@ -30,11 +29,10 @@ class WorkingDayProviderTest extends BaseTestCase
      * @dataProvider getWorkingDaysForPeriodWithoutHoliday
      */
     public function testGetWorkingDaysForPeriodWithoutHoliday(
-        DateTimeInterface $startDate,
-        DateTimeInterface $endDate,
+        DateTime $startDate,
+        DateTime $endDate,
         int $expectedWorkingDayCount
-    )
-    {
+    ): void {
         $provider = new WorkingDayProvider();
         $result   = $provider->getWorkingDaysForPeriod($startDate, $endDate);
 
@@ -45,11 +43,11 @@ class WorkingDayProviderTest extends BaseTestCase
      * @dataProvider getWorkingDaysForPeriodDataProvider
      */
     public function testGetWorkingDaysForPeriod(
-        DateTimeInterface $startDate,
-        DateTimeInterface $endDate,
+        DateTime $startDate,
+        DateTime $endDate,
         array $holidays,
         int $expectedWorkingDayCount
-    ) {
+    ): void {
         $this->configuration->method('getExcludeWeekDays')
                             ->willReturn([6, 7]);
         $this->holidayProvider->method('getHolidaysForDateRange')
